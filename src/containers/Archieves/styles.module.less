@@ -1,0 +1,46 @@
+.archieves {
+  padding: 100px 35px 70px 35px;
+  
+  :global {
+    .container {
+      .text-info {
+        max-width: 70%;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #000;
+        letter-spacing: 0.2px;
+      }
+
+      .img-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .ant-image {
+          margin-top: 15px;
+        }
+      }
+    }
+  }
+}
+
+.cooBar {
+  position: fixed;
+  right: 35px;
+  top: 100px;
+  z-index: 999;
+
+  :global {
+    .btn {
+      color: rgba(0, 0, 0, 0.25);
+      padding: 5px 16px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+
+      &:hover {
+      color: rgba(0, 0, 0, 0.55);
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+.homePage {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 50px 35px 70px 35px;
+
+  :global {
+    .container {
+      padding-left: 305px;
+    }
+  }
+}
+
+.worksList {
+  display: flex;
+  flex-wrap: wrap;
+  width: 1110px;
+
+  :global {
+    .work-item {
+      width: 370px;
+      height: 370px;
+      padding: 50px;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      :hover {
+        transform: scale(1.1);
+      }
+  
+      .work-img {
+        width: 320px;
+        height: 320px;
+        transition: all 0.3s;
+      }
+    }
+
+  }
+
+}

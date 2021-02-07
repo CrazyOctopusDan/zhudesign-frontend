@@ -1,0 +1,57 @@
+.pageHeader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+  padding: 35px;
+  backdrop-filter: blur(10px);
+  z-index: 999;
+
+  h1 {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-family: 'helvatica', sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    margin: 0;
+  }
+
+  :global {
+    .link {
+      margin: 0 5px;
+      cursor: pointer;
+      text-decoration: none;
+      color: rgba(0, 0, 0, 1);
+      padding: 0 16px;
+      transition: all 0.3s;
+  
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .short-tips {
+      position: absolute;
+      left: 35px;
+      top: 100px;
+      font-size: 14px;
+      line-height: 1.5;
+      width: 290px;
+      color: rgba(0, 0, 0, 1);
+
+      p {
+        margin-bottom: 1px;
+      }
+
+      .sec {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

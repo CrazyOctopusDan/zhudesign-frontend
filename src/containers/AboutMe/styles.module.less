@@ -1,0 +1,60 @@
+.aboutMe {
+  padding: 100px 35px 70px 35px;
+  
+  :global {
+    .container {
+      padding-left: 300px;
+      
+    }
+
+    .section {
+      display: flex;
+      margin-bottom: 110px;
+      
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .cn-intro,
+    .en-intro {
+      position: relative;
+      width: 50%;
+      box-sizing: border-box;
+      margin: 0 32px;
+      color: #000000;
+      font-family: 'helvatica', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.2px;
+
+      &.title {
+        padding-top: 60px;
+
+        &::before {
+          position: absolute;
+          top: 0;
+          font-weight: bold;
+        }
+      }
+      
+    }
+
+    .cn-award::before {
+      content: '工作荣誉：';
+    }
+
+    .en-award::before {
+      content: 'HONORS & AWARDS：';
+    }
+
+    .cn-act::before {
+      content: '活动及展览：';
+    }
+
+    .en-act::before {
+      content: 'ACTIVITIES & EXHIBITIONS：';
+    }
+  }
+}
