@@ -13,7 +13,7 @@ import {
   getIntro,
   setIntro } from '../../services'
 
-import { Button, Divider, List, Image, Modal, Input, Switch, message } from 'antd'
+import { Button, Divider, List, Image, Modal, Input, Switch, message as Message } from 'antd'
 
 const pageSize = 20
 
@@ -67,12 +67,12 @@ class BackStage extends React.Component {
       })
 
       if (code === 0) {
-        message.success('保存成功！')
+        Message.success('保存成功！')
       } else {
-        message.error('保存失败：', message)
+        Message.error('保存失败：', message)
       }
     } catch (error) {
-      message.error('保存个人信息发生了错误：', error)
+      Message.error('保存个人信息发生了错误：', error)
     }
   }
 
@@ -121,7 +121,7 @@ class BackStage extends React.Component {
         workList: data
       })
     } catch (error) {
-      message.error('获取列表发生了错误：', error)
+      Message.error('获取列表发生了错误：', error)
     }
   }
 
@@ -204,7 +204,7 @@ class BackStage extends React.Component {
         const { code } = await delArt(item.id)
 
         if (code === 0) {
-          message.success('删除成功！')
+          Message.success('删除成功！')
           const { page, totalCount } = this.state
 
           let _page = page
@@ -220,7 +220,7 @@ class BackStage extends React.Component {
 
         // this.getArtList()
       } catch (error) {
-        message.error('删除失败:', error)
+        Message.error('删除失败:', error)
       }
       return
     }
@@ -323,15 +323,15 @@ class BackStage extends React.Component {
         const res = param.id ? await updArt(param) : await createArt(param)
 
         if (res.code === 0) {
-          message.success(param.id ? '修改成功' : '新建成功')
+          Message.success(param.id ? '修改成功' : '新建成功')
           this.getArtList()
         } else {
-          message.error('操作失败！')
+          Message.error('操作失败！')
         }
 
         console.log('修改完', res)
       } catch (error) {
-        message.error('保存错误：', error)
+        Message.error('保存错误：', error)
       }
 
     }

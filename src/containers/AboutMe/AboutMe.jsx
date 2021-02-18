@@ -34,8 +34,6 @@ class AboutMe extends React.Component {
       this.setState({
         selfIntro: data
       })
-
-      console.log('gere', data)
     } catch (error) {
       console.error('获取个人信息出错：', error)
     }
