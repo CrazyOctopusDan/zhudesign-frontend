@@ -225,10 +225,12 @@ class BackStage extends React.Component {
       return
     }
 
+    console.log('这里也在设置吗', item)
+
     this.setState({
       choosedWork: item,
       choosedCover: item.coverImage.relatedUrl,
-      choosedImgList: item.items
+      choosedImgList: item.items.map(i => i.id)
     }, () => this.toggleModal(true))
   }
 
@@ -239,8 +241,6 @@ class BackStage extends React.Component {
     const { choosedWork } = this.state
     
     const _cw = JSON.parse(JSON.stringify(choosedWork))
-
-    console.log('val', val)
 
     switch (kind) {
       case 'onTop':
