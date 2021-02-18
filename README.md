@@ -15,3 +15,11 @@ app会以development环境运行\
 以 production 环境 打包到 build 文件夹里面.\
 
 查看更多部署信息： [deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+## 首页
+主要的页面全部都可以通过首页进行查看
+`域名/#/home`
+
+## 后台
+只能通过手动输入才能进入！
+`域名/#/backstage`

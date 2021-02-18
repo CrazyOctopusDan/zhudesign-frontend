@@ -102,7 +102,15 @@ class Archieves extends React.Component {
           <div className="img-list">
             <Image.PreviewGroup>
               {workInfo?.items.map((item, idx) => (
-                <Image src={item.image} className="img-item" alt="作品" key={item.id} />
+                <Image 
+                  src={item.image} 
+                  className="img-item" 
+                  alt="作品" 
+                  key={item.id}
+                  preview={{
+                    maskClassName: 'zhu-mask'
+                  }}
+                />
               ))}
             </Image.PreviewGroup>
           </div>
