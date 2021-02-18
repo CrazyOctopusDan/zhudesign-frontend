@@ -2,11 +2,12 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: 50px 35px 70px 35px;
+  padding: 140px 35px 70px 35px;
 
   :global {
     .container {
       padding-left: 305px;
+      padding-right: 120px;
     }
   }
 }
@@ -14,15 +15,19 @@
 .worksList {
   display: flex;
   flex-wrap: wrap;
-  width: 1110px;
 
   :global {
     .work-item {
-      width: 370px;
-      height: 370px;
-      padding: 50px;
+      width: 320px;
+      height: 320px;
       transition: all 0.3s;
       cursor: pointer;
+      margin-right: 50px;
+      margin-bottom: 50px;
+
+      // &:nth-child(3n+3) {
+      //   margin-right: 0;
+      // }
 
       :hover {
         transform: scale(1.1);
@@ -34,7 +39,5 @@
         transition: all 0.3s;
       }
     }
-
   }
-
 }

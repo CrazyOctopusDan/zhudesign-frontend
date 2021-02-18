@@ -5,7 +5,15 @@ import PageHeader from '../../components/PageHeader/PageHeader'
 import RichText from '../../components/RichText/RichText'
 import Uploader from '../../components/Uploader/Uploader'
 
-import { Button, Divider, List, Image, Modal, Input, Upload } from 'antd'
+import { 
+  getArtsList,
+  createArt,
+  updArt,
+  delArt,
+  getIntro,
+  setIntro } from '../../services'
+
+import { Button, Divider, List, Image, Modal, Input, Switch, message } from 'antd'
 
 const pageSize = 20
 
@@ -16,147 +24,104 @@ class BackStage extends React.Component {
 
     this.state = {
       page: 1,
-      dataCount: 30,
+      totalCount: 30,
       selfIntro: {
+        topTip: '',
         cnSelf: '',
         enSelf: '',
         cnAward: '',
         enAward: '',
-        cnAct: '',
-        enAct: ''
+        cnExp: '',
+        enExp: ''
       },
 
       // 作品集相关
-      workList: [
-        {
-          name: '这是第一幅作品',
-          brief: '这个作品牛逼啊啊！！！This is tree new bee s work',
-          cover: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg',
-          imgList: [{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense2_1_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense3_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense4_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense5_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense6_5_4500.jpg'
-          }]
-        }, {
-          name: '这是第一幅作品',
-          brief: '这个作品牛逼啊啊！！！This is tree new bee s work',
-          cover: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg',
-          imgList: [{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense2_1_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense3_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense4_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense5_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense6_5_4500.jpg'
-          }]
-        }, {
-          name: '这是第二幅作品',
-          brief: '这个作品牛逼啊啊！！！This is tree new bee s work',
-          cover: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg',
-          imgList: [{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense2_1_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense3_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense4_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense5_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense6_5_4500.jpg'
-          }]
-        }, {
-          name: '这是第三幅作品',
-          brief: '这个作品牛逼啊啊！！！This is tree new bee s work',
-          cover: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg',
-          imgList: [{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense2_1_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense3_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense4_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense5_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense6_5_4500.jpg'
-          }]
-        }, {
-          name: '这是第四幅作品',
-          brief: '这个作品牛逼啊啊！！！This is tree new bee s work',
-          cover: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg',
-          imgList: [{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense2_1_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense3_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense4_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense5_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense6_5_4500.jpg'
-          }]
-        }, {
-          name: '这是第177171717171幅作品',
-          brief: '这个作品牛逼啊啊！！！This is tree new bee s work',
-          cover: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg',
-          imgList: [{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense2_1_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense3_4500.jpg'
-          }, {
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense4_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense5_4500.jpg'
-          },{
-            path: 'https://payload.cargocollective.com/1/19/639301/14198891/makeessense6_5_4500.jpg'
-          }]
-        }
-      ],
-      workIntro: '',
+      workList: [],
       choosedWork: null,
+      choosedCover: '',
+      choosedImgList: [],
       modalVisible: false
     }
   }
 
-  /**
-   * 跳转页面
-   */
-  onLibrary(param) {
-    this.props.history.push()
+  componentDidMount() {
+    this.getArtList()
+    this.getSelfIntro()
   }
 
   /**
    * 保存个人信息
    */
-  saveSelfIntro = () => {
+  saveSelfIntro = async () => {
+    const {selfIntro} = this.state
 
+    try {
+      const { code, message } = await setIntro({
+        summary: selfIntro.topTip,
+        cnDescription: selfIntro.cnSelf,
+        enDescription: selfIntro.enSelf,
+        cnHonors: selfIntro.cnAward,
+        enHonors: selfIntro.enAward,
+        cnExperiences: selfIntro.cnExp,
+        enExperiences: selfIntro.enExp,
+      })
+
+      if (code === 0) {
+        message.success('保存成功！')
+      } else {
+        message.error('保存失败：', message)
+      }
+    } catch (error) {
+      message.error('保存个人信息发生了错误：', error)
+    }
   }
 
   /**
    * 设置翻页
    */
-  setListData = (page) => {
-    this.setState({page}, () => this.getDetail())
+  onPageChange = (page) => {
+    this.setState({page}, () => this.getArtList())
+  }
+
+  /**
+   * 查询个人简介信息
+   */
+  getSelfIntro = async () => {
+    try {
+      const { data } = await getIntro()
+      console.log('看看个人介绍', data)
+      this.setState({
+        selfIntro: {
+          topTip: data.summary || '-',
+          cnSelf: data.cnDescription || '-',
+          enSelf: data.enDescription || '-',
+          cnAward: data.cnHonors || '-',
+          enAward: data.enHonors || '-',
+          cnExp: data.cnExperiences || '-',
+          enExp: data.enExperiences || '-',
+        }
+      })
+    } catch (error) {
+      console.error('获取个人介绍出错:', error)
+    }
   }
 
   /**
    * 查询列表信息
    */
-  getDetail = async () => {
+  getArtList = async () => {
     const { page } = this.state
 
     try {
-      
+      const { totalCount, data } = await getArtsList({full: 1, page, pageSize})
+      console.log('获取了列表数据', data, totalCount)
+
+      this.setState({
+        totalCount,
+        workList: data
+      })
     } catch (error) {
-      
+      message.error('获取列表发生了错误：', error)
     }
   }
 
@@ -164,10 +129,21 @@ class BackStage extends React.Component {
    * 富文本输入监听
    */
   onChange = (type, val) => {
+    console.log('富文本输入', val)
+    const { selfIntro } = this.state
     switch (type) {
+      case 'topTip':
+        this.setState({
+          selfIntro: {
+            ...selfIntro,
+            topTip: val
+          }
+        })
+        break;
       case 'cnSelf':
         this.setState({
           selfIntro: {
+            ...selfIntro,
             cnSelf: val
           }
         })
@@ -175,6 +151,7 @@ class BackStage extends React.Component {
       case 'enSelf':
         this.setState({
           selfIntro: {
+            ...selfIntro,
             enSelf: val
           }
         })
@@ -182,6 +159,7 @@ class BackStage extends React.Component {
       case 'cnAward':
         this.setState({
           selfIntro: {
+            ...selfIntro,
             cnAward: val
           }
         })
@@ -189,31 +167,28 @@ class BackStage extends React.Component {
       case 'enAward':
         this.setState({
           selfIntro: {
+            ...selfIntro,
             enAward: val
           }
         })
         break;
-      case 'cnAct':
+      case 'cnExp':
         this.setState({
           selfIntro: {
-            cnAct: val
+            ...selfIntro,
+            cnExp: val
           }
         })
         break;
-      case 'enAct':
+      case 'enExp':
         this.setState({
           selfIntro: {
-            enAct: val
+            ...selfIntro,
+            enExp: val
           }
         })
         break;
     
-      case 'work':
-        this.setState({
-          workIntro: val
-        })
-
-        break;
       default:
         break;
     }
@@ -222,13 +197,101 @@ class BackStage extends React.Component {
   /**
    * 选中某项 准备编辑
    */
-  onEdit = (item) => {
+  onEdit = async (item, isDelete = false) => {
+    if (isDelete) {
+      // TODO 删除
+      try {
+        const { code } = await delArt(item.id)
+
+        if (code === 0) {
+          message.success('删除成功！')
+          const { page, totalCount } = this.state
+
+          let _page = page
+
+          if (_page > 1) {
+            _page = totalCount - 1 > (_page - 1) * pageSize ? _page : _page - 1
+          }
+
+          this.setState({
+            page: _page
+          }, () => this.getArtList())
+        }
+
+        // this.getArtList()
+      } catch (error) {
+        message.error('删除失败:', error)
+      }
+      return
+    }
+
     this.setState({
-      choosedWork: item
+      choosedWork: item,
+      choosedCover: item.coverImage.relatedUrl,
+      choosedImgList: item.items
     }, () => this.toggleModal(true))
   }
 
-  
+  /**
+   * 浮层内的表单编辑
+   */
+  onFDEdit = (kind, val) => {
+    const { choosedWork } = this.state
+    
+    const _cw = JSON.parse(JSON.stringify(choosedWork))
+
+    console.log('val', val)
+
+    switch (kind) {
+      case 'onTop':
+        _cw.onTop = val
+        break;
+
+      case 'completionTime':
+        _cw.completionTime = val
+        break;
+
+      case 'name':
+        _cw.name = val
+        break;
+
+      case 'description':
+        _cw.description = val
+        break;
+    
+      default:
+        break;
+    }
+
+    this.setState({
+      choosedWork: _cw
+    })
+  }
+
+  /**
+   * 作品封面上传监控
+   * @param {*} visible 
+   */
+  onCoverChange = (imgList) => {
+    console.log('coverChange', imgList)
+    const _d = imgList.length ? imgList[0].relatedUrl : ''
+
+    this.setState({
+      choosedCover: _d
+    })
+  }
+
+  /**
+   * 作品集合上传监控
+   */
+  onWorkImgChange = (imgList) => {
+    console.log('imgListChange', imgList)
+    const _d = imgList.map(item => item.id || item.uid).filter(i => !!i)
+    console.log('imgListChange', imgList, _d)
+    this.setState({
+      choosedImgList: _d
+    })
+  }
 
   /**
    * 打开新建、编辑浮层
@@ -240,19 +303,40 @@ class BackStage extends React.Component {
   }
 
   /**
-   * 处理浮层
+   * 处理浮层 关闭 行为
    * @param {Boolean} isSave 
    */
-  handleModal = (isSave) => {
+  handleModal = async (isSave) => {
+    const { choosedWork, choosedImgList, choosedCover } = this.state
     if (isSave) {
-      // 保存关闭
-      
+      // 保存 处理 并且重新获取一次列表数据
+      const param = {
+        ...choosedWork,
+          onTop: choosedWork.onTop ? 1 : 0,
+          coverImage: choosedCover,
+          itemIds: choosedImgList
+      }
 
-      
+      delete param.items
 
+      try {
+        const res = param.id ? await updArt(param) : await createArt(param)
+
+        if (res.code === 0) {
+          message.success(param.id ? '修改成功' : '新建成功')
+          this.getArtList()
+        } else {
+          message.error('操作失败！')
+        }
+
+        console.log('修改完', res)
+      } catch (error) {
+        message.error('保存错误：', error)
+      }
 
     }
 
+    // 重置并且关闭
     this.setState({
       choosedWork: null
     }, () => this.toggleModal(false))
@@ -268,23 +352,26 @@ class BackStage extends React.Component {
       <div className={`${styles.selfIntro} section`}>
         <Divider>ABOUT ME</Divider>
 
+        <div className="title">顶部简介：</div>
+        <RichText value={selfIntro.topTip} onChange={this.onChange} kind="topTip" />
+
         <div className="title">中文个人简介：</div>
         <RichText value={selfIntro.cnSelf} onChange={this.onChange} kind="cnSelf" />
 
         <div className="title">英文个人简介：</div>
         <RichText value={selfIntro.enSelf} onChange={this.onChange} kind="enSelf" />
 
-        <div className="title">中文工作荣誉：</div>
+        <div className="title">中文工作经历：</div>
         <RichText value={selfIntro.cnAward} onChange={this.onChange} kind="cnAward" />
 
-        <div className="title">英文工作荣誉：</div>
+        <div className="title">英文工作经历：</div>
         <RichText value={selfIntro.enAward} onChange={this.onChange} kind="enAward" />
 
-        <div className="title">中文活动&展览：</div>
-        <RichText value={selfIntro.cnAct} onChange={this.onChange} kind="cnAct" />
+        <div className="title">中文工作荣誉：</div>
+        <RichText value={selfIntro.cnExp} onChange={this.onChange} kind="cnExp" />
 
-        <div className="title">英文活动&展览：</div>
-        <RichText value={selfIntro.enAct} onChange={this.onChange} kind="enAct" />
+        <div className="title">英文工作荣誉：</div>
+        <RichText value={selfIntro.enExp} onChange={this.onChange} kind="enExp" />
 
         <Button type="primary" onClick={this.saveSelfIntro} size="large" >保存</Button>
       </div>
@@ -295,13 +382,13 @@ class BackStage extends React.Component {
    * 编辑作品的列表
    */
   renderArchList() {
-    const { workList, page, dataCount } = this.state
+    const { workList, page, totalCount } = this.state
 
     const pagination = {
-      total: dataCount,
+      total: totalCount,
       current: page,
       pageSize,
-      onChange: this.setListData
+      onChange: this.onPageChange
     }
 
     return (
@@ -312,7 +399,14 @@ class BackStage extends React.Component {
           className="add-btn"
           type="primary" 
           size="large"
-          onClick={() => this.toggleModal(true)}
+          onClick={() => {
+            this.setState({
+              choosedCover: '',
+              choosedImgList: [],
+              choosedWork: {}
+            })
+            this.toggleModal(true)
+          }}
         >
           新增作品
         </Button>
@@ -325,14 +419,18 @@ class BackStage extends React.Component {
           }
           renderItem={
             item => (
-              <List.Item className="work-item" actions={[<a onClick={() => this.onEdit(item)}>编辑作品</a>]}>
+              <List.Item 
+                className="work-item" 
+                actions={
+                  [<a onClick={() => this.onEdit(item)}>编辑作品</a>, // eslint-disable-line jsx-a11y/anchor-is-valid
+                  <a className="del-btn" onClick={() => this.onEdit(item, true)}>删除</a>] // eslint-disable-line jsx-a11y/anchor-is-valid
+                }
+              >
                 <List.Item.Meta
-                  avatar={<Image className="work-img" src={item.cover} />}
+                  avatar={<Image className="work-img" src={item.coverImage?.url} />}
                   title={item.name}
-                  description={item.brief}
-                >
-
-                </List.Item.Meta>
+                  description={item.completionTime + '|' + item.description}
+                />
               </List.Item>
             )
           }
@@ -347,10 +445,27 @@ class BackStage extends React.Component {
   renderModal() {
     const { modalVisible, choosedWork } = this.state
 
-    const _title = choosedWork == null ? '新增作品' : '编辑作品'
+    const _title = choosedWork?.id ? '编辑作品' : '新增作品'
+
+    const coverImg = choosedWork?.id ? [{
+      ...choosedWork.coverImage,
+      name: '封面图'
+    }] : []
+
+    const imgList = choosedWork.items
+
+    const renderSW = (
+      <Switch 
+        checkedChildren="置顶" 
+        unCheckedChildren="取消" 
+        checked={choosedWork.onTop} 
+        onChange={(e) => this.onFDEdit('onTop', e)}
+      />
+    )
 
     return (
       <Modal
+        className={styles.editModal}
         title={_title}
         visible={modalVisible}
         destroyOnClose
@@ -361,18 +476,55 @@ class BackStage extends React.Component {
       >
         <div className="sec">
           <div className="title">
+            {renderSW}
+          </div>
+        </div>
+
+        <div className="sec">
+          <div className="title">
+            作品时间「yyyy-mm-dd」：
+          </div>
+
+          <Input 
+            value={choosedWork.completionTime} 
+            onChange={(e) => this.onFDEdit('completionTime', e.target.value)}
+          />
+        </div>
+
+        
+
+        <div className="sec">
+          <div className="title">
             作品名称：
           </div>
 
-          <Input ></Input>
+          <Input
+            value={choosedWork.name}
+            onChange={(e) => this.onFDEdit('name', e.target.value)}
+          ></Input>
         </div>
 
         <div className="sec">
           <div className="title">
             作品简介：
           </div>
+          
+          <Input.TextArea
+            value={choosedWork.description}
+            onChange={(e) => this.onFDEdit('description', e.target.value)}
+          />
+        </div>
 
-          <Input.TextArea ></Input.TextArea>
+        <div className="sec">
+          <div className="title">
+            封面图：
+          </div>
+
+          <Uploader 
+            limit={1} 
+            initFileList={coverImg}
+            onFileChange={this.onCoverChange}
+          />
         </div>
 
         <div className="sec">
@@ -380,13 +532,17 @@ class BackStage extends React.Component {
             作品图集：
           </div>
 
-          <Uploader />
+          <Uploader 
+            initFileList={imgList}
+            onFileChange={this.onWorkImgChange}
+          />
         </div>
       </Modal>
     )
   }
 
   render() {
+    const { choosedWork } = this.state
     return (
       <div className={styles.backstage}>
         <PageHeader history={this.props.history}/>
@@ -396,7 +552,7 @@ class BackStage extends React.Component {
 
           {this.renderArchList()}
 
-          {this.renderModal()}
+          {choosedWork && this.renderModal()}
         </div>
       </div>
     )

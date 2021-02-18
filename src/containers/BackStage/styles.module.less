@@ -19,6 +19,18 @@
         font-size: 14px;
         line-height: 1.5;
 
+        a {
+          transition: all 0.3s;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+
+        .del-btn {
+          color: red;
+        }
+
         .left {
           width: 70%;
 
@@ -55,6 +67,20 @@
     .add-btn {
       margin-bottom: 16px;
       padding: 0 32px;
+    }
+  }
+}
+
+.editModal {
+  :global {
+    .sec {
+      margin-bottom: 16px;
+
+      .title {
+        font-size: 14px;
+        color: #425b6d;
+        margin-bottom: 8px;
+      }
     }
   }
 }

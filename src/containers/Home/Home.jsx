@@ -4,52 +4,30 @@ import styles from './styles.module.less'
 // import PageHeader from '@components/PageHeader/PageHeader'
 import PageHeader from '../../components/PageHeader/PageHeader'
 
+import { getArtsList } from '../../services'
+
 let timer = null
 
+const pageSize = 21
 class HomePage extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
       codeType: true,
+      page: 1,
 
-      worksList: [{
-        id: 1,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 2,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 3,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 4,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 5,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 6,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 7,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 8,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 9,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      },{
-        id: 10,
-        path: 'https://payload.cargocollective.com/1/19/639301/14199919/prt_320x320_1608519762_2x.jpg'
-      }]
+      totalCount: 0,
+      worksList: []
     }
   }
 
   componentDidMount() {
     // 挂载滚动监听
     window.addEventListener('scroll', this.bindScroll)
+
+    // 获取列表信息
+    this.getArtList()
   }
 
   componentWillUnmount() {
@@ -58,10 +36,31 @@ class HomePage extends React.Component {
   }
 
   /**
+   * 查询列表信息
+   */
+  getArtList = async () => {
+    const { page, worksList } = this.state
+
+    try {
+      const { totalCount, data } = await getArtsList({page, pageSize})
+      console.log('获取了列表数据', data, totalCount)
+
+      this.setState({
+        totalCount,
+        worksList: worksList.concat(data).filter(i => !!i)
+      })
+    } catch (error) {
+      console.error('获取列表发生了错误：', error)
+    }
+  }
+
+  /**
    * 滚动监听事件
    * @param {*} param 
    */
   bindScroll = (event) => {
+    const { totalCount, worksList, page } = this.state
+
     const calc = () => {
       // 滚动的高度
       const scrollTop = (event.srcElement ? event.srcElement.documentElement.scrollTop : false) || window.pageYOffset || (event.srcElement ? event.srcElement.body.scrollTop : 0);
@@ -75,13 +74,14 @@ class HomePage extends React.Component {
       console.log('剩余高度！', height)
       if (height <= (320 || 0)) {
           // 判断执行回调条件
-          if (this.state.codeType) {
+          if (this.state.codeType && worksList.length < totalCount) {
               // 执行回调
               // this.props.scrollCallback();
               // 关闭判断执行开关
               this.setState({
                 codeType: false,
-              });
+                page: page+1
+              }, () => this.getArtList());
           }
       } else {
           // 打开判断执行开关
@@ -122,7 +122,7 @@ class HomePage extends React.Component {
             key={work.id}
             onClick={() => this.goToLibrary(work.id)}
           >
-            <img className="work-img" alt="作品" src={work.path}/>
+            <img className="work-img" alt="作品" src={work.coverImage?.url}/>
           </div>
         ))}
       </div>

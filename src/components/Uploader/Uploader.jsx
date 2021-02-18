@@ -1,9 +1,10 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { Upload, Button, Tooltip } from 'antd';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Upload, Button, Tooltip, Image } from 'antd';
 import { DndProvider, useDrag, useDrop, createDndContext } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import { UploadOutlined } from '@ant-design/icons';
+import { baseUrl } from '../../utils/request'
 
 const RNDContext = createDndContext(HTML5Backend);
 
@@ -40,49 +41,50 @@ const DragableUploadListItem = ({ originNode, moveRow, file, fileList }) => {
       {originNode.props.children}
     </Tooltip>
   );
+
+  const normalNode = (
+    <Tooltip 
+      title={() => <Image src={file.url} />} 
+      getPopupContainer={() => document.body}
+    >
+      {originNode}
+    </Tooltip>
+  )
+
   return (
     <div
       ref={ref}
       className={`ant-upload-draggable-list-item ${isOver ? dropClassName : ''}`}
       style={{ cursor: 'move' }}
     >
-      {file.status === 'error' ? errorNode : originNode}
+      
+      {file.status === 'error' ? errorNode : normalNode}
     </div>
   );
 };
 
-const DragSortingUpload = () => {
+// Upload
+const DragSortingUpload = ({
+  limit = 99,
+  initFileList = [],
+  onFileChange
+}) => {
   const [fileList, setFileList] = useState([
-    {
-      uid: '-1',
-      name: 'image1.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-2',
-      name: 'image2.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-3',
-      name: 'image3.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-4',
-      name: 'image4.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    {
-      uid: '-5',
-      name: 'image.png',
-      status: 'error',
-    },
+    // {
+    //   uid: '-1',
+    //   name: 'image1.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // }
   ]);
+  const [init, setInit] = useState(false)
+
+  useEffect(() => {
+    if (initFileList.length && !init) {
+      setFileList(initFileList)
+      setInit(true)
+    }
+  }, [initFileList, init])
 
   const moveRow = useCallback(
     (dragIndex, hoverIndex) => {
@@ -95,22 +97,57 @@ const DragSortingUpload = () => {
           ],
         }),
       );
+      // props向外传递
+      onFileChange(
+        update(fileList, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragRow],
+          ],
+        })
+      )
     },
+    // eslint-disable-next-line
     [fileList],
   );
 
   const manager = useRef(RNDContext);
 
   const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+    console.log('看看这个新的newFileList是什么', newFileList)
+
+    const _list = newFileList.reduce((acc, item) => {
+      if (item['response'] ) {
+        if (item['response'].Code !== -1) {
+          return [...acc, {
+            name: item.name,
+            uid: item.response?.data?.uid,
+            status: item.status,
+            url: item.response?.data?.absoluteUrl || '',
+            relatedUrl: item.response?.data?.relatedUrl || ''
+          }]
+        } else {
+          return [...acc]
+        }
+      } else {
+        return [...acc, item]
+      }
+    }, [])
+
+    console.log('看看这个处理好的FileList是什么', _list)
+
+    setFileList(_list);
+    // props向外传递
+    onFileChange(_list)
   };
 
   return (
     <DndProvider manager={manager.current.dragDropManager}>
       <Upload
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        action={baseUrl + "/api/artworks/upload"}
         fileList={fileList}
         onChange={onChange}
+        multiple
         itemRender={(originNode, file, currFileList) => (
           <DragableUploadListItem
             originNode={originNode}
@@ -120,9 +157,11 @@ const DragSortingUpload = () => {
           />
         )}
       >
-        <Button>
-          <UploadOutlined /> 点击上传
-        </Button>
+        { fileList.length < limit ? (
+          <Button>
+            <UploadOutlined /> 点击上传
+          </Button>
+        ) : null}
       </Upload>
     </DndProvider>
   );
