@@ -3,6 +3,7 @@ import styles from './styles.module.less'
 
 // import PageHeader from '@components/PageHeader/PageHeader'
 import PageHeader from '../../components/PageHeader/PageHeader'
+import PageFooter from '../../components/PageFooter/PageFooter'
 
 import { getArtsList } from '../../services'
 
@@ -137,6 +138,8 @@ class HomePage extends React.Component {
         <div className="container">
           {this.renderWorks()}
         </div>
+
+        <PageFooter />
       </div>
     )
   }

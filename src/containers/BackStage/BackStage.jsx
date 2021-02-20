@@ -242,6 +242,8 @@ class BackStage extends React.Component {
     
     const _cw = JSON.parse(JSON.stringify(choosedWork))
 
+    console.log('让我快快快', kind, val)
+
     switch (kind) {
       case 'onTop':
         _cw.onTop = val
@@ -509,9 +511,14 @@ class BackStage extends React.Component {
             作品简介：
           </div>
           
-          <Input.TextArea
-            value={choosedWork.description}
+          {/* <Input.TextArea
+            value={}
             onChange={(e) => this.onFDEdit('description', e.target.value)}
+          /> */}
+          <RichText 
+            value={choosedWork.description} 
+            onChange={this.onFDEdit} 
+            kind="description" 
           />
         </div>
 
