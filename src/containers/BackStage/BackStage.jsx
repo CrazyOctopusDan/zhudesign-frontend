@@ -242,8 +242,6 @@ class BackStage extends React.Component {
     
     const _cw = JSON.parse(JSON.stringify(choosedWork))
 
-    console.log('让我快快快', kind, val)
-
     switch (kind) {
       case 'onTop':
         _cw.onTop = val
